@@ -6,21 +6,50 @@ import ItemsCarousel from 'react-items-carousel';
 
 export class Album extends React.Component {
 
-    state = {
-        photos : {},
-        activeItemIndex: 0
+    constructor() {
+        super();
+        this.state = {
+            photos : [],
+            activeItemIndex: 0,
+            photosToRender : []
+        };
+    }
+
+    changeActiveItem = (activeItemIndex) =>  {
+
+        let photosToRender = this.state.photosToRender;
+        let photo = this.state.photos[this.state.photosToRender.length];
+        photosToRender.push(
+            <div key={'photo' + photo.id} style={{ height: '150', width: '150'}}>
+                <div>
+                    <img src={photo.thumbnailUrl}  alt={photo.title} />
+                </div>
+                <div>
+                    <span> { this.getClippedTitle(photo.title) } </span>
+                </div>
+                <div>
+                    <span> Id : {photo.id} </span>
+                </div>
+            </div>
+        )
+        this.setState({ activeItemIndex, photosToRender}); 
     };
 
-    changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
-
     componentDidMount() {
-        this.getPhotos(this.props.id);
+        if (_.isEmpty(this.state.photos)) {
+            this.getPhotos(this.props.id)
+            .then(photos => {
+                let photosToRender = this.getPhotosToRender(photos);
+                this.setState({
+                    photos : photos,
+                    photosToRender : photosToRender.slice(0,8)
+                })
+            })
+            .catch(err => { /*...handle the error...*/});   
+        }
     }
 
     render() {
-
-        let photosToRender = this.getPhotosToRender(this.state.photos);
-
         return (
             <div className="">
                 <div>
@@ -34,7 +63,7 @@ export class Album extends React.Component {
                 </div>
                 <div>
                     {
-                        !_.isEmpty(photosToRender) &&
+                        !_.isEmpty(this.state.photosToRender) &&
 
                         <ItemsCarousel
                             // Placeholder configurations
@@ -55,13 +84,13 @@ export class Album extends React.Component {
                             activeItemIndex={this.state.activeItemIndex}
                             activePosition={'center'}
                     
-                            chevronWidth={24}
+                            chevronWidth={50}
                             rightChevron={'>'}
                             leftChevron={'<'}
                             outsideChevron={false}
                             width={'100%'}
                         >
-                            {photosToRender}
+                            {this.state.photosToRender}
                         </ItemsCarousel>
                     }
                 </div>
@@ -119,14 +148,8 @@ export class Album extends React.Component {
             return;
         }
 
-        try {
-            let res = await API.get(`/photos?albumId=${id}`);
-            let data  = res.data;
-            this.setState({ photos: data });
-        } catch(error) {
-            console.log(error);
-        }
-
+        let res = await API.get(`/photos?albumId=${id}`);
+        return res.data;
     }
 }
 
