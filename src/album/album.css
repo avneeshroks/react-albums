@@ -1,0 +1,26 @@
+.album-wrapper {
+    background: #f1f3f6;
+}
+
+.album {
+    padding: 5px 5px 15px 5px;
+    margin-bottom: 5px;
+}
+
+.album-header {
+    background: #ffffff;
+    padding: 20px;
+    border-bottom: 2px solid #f1f3f6;    
+}
+
+.album-header span {
+    color: #cfcfcf;
+}
+
+.album-photos {
+    background: #ffffff;
+    padding: 20px;
+    -webkit-box-shadow: 0 8px 6px -6px #cfcfcf;
+       -moz-box-shadow: 0 8px 6px -6px #cfcfcf;
+            box-shadow: 0 8px 6px -6px #cfcfcf;
+}
