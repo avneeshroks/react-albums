@@ -119,22 +119,6 @@ export class Album extends React.Component {
         
     }
 
-    getClippedTitle(title) {
-        if(!title) {
-            return '';
-        }
-
-        let clipLength = 19;
-
-        if(title.length > clipLength) {
-            title = title.substring(0, clipLength);
-        }
-
-        title = title + '...';
-
-        return title;
-    }
-
     async getPhotos(id) {
         
         if (!id) {
