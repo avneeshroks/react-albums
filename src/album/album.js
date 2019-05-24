@@ -20,10 +20,17 @@ export class Album extends React.Component {
     changeActiveItem = (activeItemIndex) =>  {
 
         let photosToRender = this.state.photosToRender;
+        
+        if(_.isEmpty(this.state.photos[this.state.photosToRender.length])) {
+            this.setState({ activeItemIndex });
+            return;
+        }
+        
         let photo = this.state.photos[this.state.photosToRender.length];
         photosToRender.push(
             <Photo key={'photo' + photo.id} {...photo}></Photo>
-        )
+        );
+
         this.setState({ activeItemIndex, photosToRender}); 
     };
 
